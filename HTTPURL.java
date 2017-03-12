@@ -11,7 +11,7 @@ public class HTTPURL {
     private final String agent = "Mozilla/5.0";
 
     public static void main(String args[]) {
-        // Simply creates an instance of the class
+        //creation of class instance
         HTTPURL http = new HTTPURL();
         try {
             // Calls the go method
@@ -32,10 +32,12 @@ public class HTTPURL {
 
         connect.setRequestProperty("user-Agent", agent);
 
-        // Stores the response code from the server
+        // stores response code
         int responseCode = connect.getResponseCode();
+        
         // Prints out that its sending the response to the URL
-        System.out.println("\nSending 'GET' response to URL: " + url);
+        System.out.println("\nRequesting response from URL: " + url);
+        
         // Prints response code that was received from the server
         System.out.println("Response: " + responseCode);
 
@@ -44,6 +46,7 @@ public class HTTPURL {
                 new InputStreamReader(connect.getInputStream()));
 
         String serverInput;
+        
         // Saves the input stream that was received from the server
         StringBuffer savedInput = new StringBuffer();
         
