@@ -1,64 +1,77 @@
 package HTTPURLCode;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
+import java.io.*;
 
+// shows you how to upload content from a specific URL address
 public class HTTPURL {
 
-    // This stores the agent user to Mozilla 5.0
-    private final String agent = "Mozilla/5.0";
+    private final String uAgent = "Mozilla/5.0";
 
-    public static void main(String args[]) {
-        //creation of class instance
-        HTTPURL http = new HTTPURL();
+    public static void main(String[] args) {
+
+    	HTTPURL conn = new HTTPURL();
+
         try {
-            // Calls the go method
-            http.go();
-        } catch (Exception e) {
+            conn.run();
+            conn.testUrl();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    private void go() throws Exception{
+    private void run() throws Exception {
 
-        // Stores the keyword of "Dinosaur" from the URL of the specified Google search
-        URL url = new URL("https://www.google.com/#q=Dinosaur&*");
+        URL myUrl = new URL("https://www.lds.org/?lang=eng");
+        HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
+        conn.setDoOutput(true);
 
-        // Connects to the URL
-        HttpURLConnection connect = (HttpURLConnection) url.openConnection();
-        connect.setDoOutput(true); //Allows POST
+        conn.setRequestProperty("agent", uAgent);
 
-        connect.setRequestProperty("user-Agent", agent);
+        int rc = conn.getResponseCode();
+        System.out.println("\nSending the response to the specified URL: " + myUrl);
+        System.out.println("Response Code = " + rc);
+        System.out.println();
+    }
 
-        // stores response code
-        int responseCode = connect.getResponseCode();
-        
-        // Prints out that its sending the response to the URL
-        System.out.println("\nRequesting response from URL: " + url);
-        
-        // Prints response code that was received from the server
-        System.out.println("Response: " + responseCode);
+    private void testUrl(){
 
-        // Creates buffer reader and stores the input stream from the server
-        BufferedReader buffer = new BufferedReader(
-                new InputStreamReader(connect.getInputStream()));
+        String myUrl = "https://www.lds.org/?lang=eng";
+        URL byuiUrl;
 
-        String serverInput;
-        
-        // Saves the input stream that was received from the server
-        StringBuffer savedInput = new StringBuffer();
-        
-        while((serverInput = buffer.readLine()) != null) {
-            savedInput.append(serverInput);
+        try {
+            byuiUrl = new URL(myUrl);
+            HttpURLConnection httpConn = (HttpURLConnection)byuiUrl.openConnection();
+
+            print(httpConn);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
-        buffer.close();
-        // Prints the input stream that was received from the server in a java string.
-        System.out.println(savedInput.toString());
-
-
     }
 
+    private void print(HttpURLConnection httpConnection){
+        if(httpConnection != null){
+
+            try {
+                System.out.println("URL Content of https://www.lds.org/?lang=eng:");
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+
+                String s;
+
+                while ((s = buffer.readLine()) != null){
+                    System.out.println(s);
+                }
+                buffer.close();
+
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
